@@ -41,11 +41,16 @@ export async function saveScreenshot (
             context: contexts[0].context
         })
         screenBuffer = data
-    } else {
-        screenBuffer = await this.takeScreenshot()
+      else {
+        try {
+            screenBuffer = await this.takeScreenshot();
+        } catch (error) {
+            console.log('this.takeScreenshot failed with error',error)
+        }
     }
-    const screenshot = Buffer.from(screenBuffer, 'base64')
-    fs.writeFileSync(absoluteFilepath, screenshot)
-
-    return screenshot
+    if(screenBuffer){
+        const screenshot = Buffer.from(screenBuffer, 'base64');
+        fs.writeFileSync(absoluteFilepath, screenshot);
+        return screenshot;
+    }
 }
